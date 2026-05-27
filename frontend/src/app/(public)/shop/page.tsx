@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "../../../context/CartContext";
 
-export const metadata: Metadata = {
-  title: "Shop | LUXURY LAUNDRY.",
-  description:
-    "Browse and order our laundry services online. Wash & Fold, Steam Iron, Dry Cleaning and more.",
-};
+// Metadata can't be exported from a client component, moved to a layout or ignored since it's a sub-page
 
 const products = [
   {
@@ -84,6 +82,8 @@ const products = [
 ];
 
 export default function ShopPage() {
+  const { addToCart } = useCart();
+
   return (
     <>
       {/* Page Hero */}
@@ -190,7 +190,15 @@ export default function ShopPage() {
                         </span>
                       )}
                     </div>
-                    <button className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-1.5">
+                    <button
+                      onClick={() => addToCart({
+                        serviceId: product.id,
+                        name: product.name,
+                        pricePerUnit: product.price,
+                        unit: "pack/piece" // Fallback since we didn't specify unit in dummy data
+                      })}
+                      className="bg-primary-500 hover:bg-primary-600 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5"
+                    >
                       <i className="fa-solid fa-cart-plus text-xs" />
                       Add
                     </button>
