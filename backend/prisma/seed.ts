@@ -62,7 +62,8 @@ async function main() {
     console.log(`✅ Service: ${service.name} — ₹${service.pricePerUnit}/${service.unit}`);
   }
 
-  // 4. Create Sample Orders
+  // 4. Create Sample Orders (Skipped for production so it doesn't clutter dashboard)
+  /*
   const ordersData = [
     { serviceId: services[0].id, quantity: 5, totalAmount: 550, address: "C-12, Mansarovar, Jaipur", status: "DELIVERED", notes: "Please use fragrance-free detergent" },
     { serviceId: services[1].id, quantity: 3, totalAmount: 495, address: "A-45, Vaishali Nagar, Jaipur", status: "PROCESSING" },
@@ -77,6 +78,7 @@ async function main() {
     });
   }
   console.log(`✅ ${ordersData.length} sample orders created`);
+  */
 
   // 5. Create Content Entries
   const contentData = [

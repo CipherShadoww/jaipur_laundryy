@@ -71,6 +71,20 @@ export default function AdminOrdersPage() {
     } catch { /* ignore */ }
   };
 
+  const deleteOrder = async (id: string) => {
+    if (!confirm("Are you sure you want to permanently delete this order?")) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API}/api/orders/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setOrders((prev) => prev.filter((o) => o.id !== id));
+      }
+    } catch { /* ignore */ }
+  };
+
   const filtered = filter === "ALL" ? orders : orders.filter((o) => o.status === filter);
 
   return (
@@ -150,9 +164,14 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <button onClick={() => setEditingId(order.id === editingId ? null : order.id)} className="text-primary-500 hover:text-primary-600 text-xs font-semibold">
-                        Edit
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => setEditingId(order.id === editingId ? null : order.id)} className="text-primary-500 hover:text-primary-600 text-xs font-semibold">
+                          Edit
+                        </button>
+                        <button onClick={() => deleteOrder(order.id)} className="text-red-500 hover:text-red-600 text-xs font-semibold" title="Delete Order">
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
