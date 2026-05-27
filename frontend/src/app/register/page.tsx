@@ -39,8 +39,13 @@ export default function RegisterPage() {
       } else {
         setError(data.message || "Registration failed");
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err: any) {
+      console.error("Register fetch error:", err);
+      if (err.name === "SyntaxError") {
+        setError(`Server returned invalid response. Your NEXT_PUBLIC_API_URL might be wrong or the backend is down.`);
+      } else {
+        setError(err.message || "Something went wrong connecting to the backend.");
+      }
     } finally {
       setLoading(false);
     }

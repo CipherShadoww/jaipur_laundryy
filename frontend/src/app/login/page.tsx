@@ -35,8 +35,13 @@ export default function LoginPage() {
       } else {
         setError(data.message || "Invalid credentials");
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err: any) {
+      console.error("Login fetch error:", err);
+      if (err.name === "SyntaxError") {
+        setError(`Server returned invalid response. Your NEXT_PUBLIC_API_URL might be wrong or the backend is down.`);
+      } else {
+        setError(err.message || "Something went wrong connecting to the backend.");
+      }
     } finally {
       setLoading(false);
     }
