@@ -40,7 +40,8 @@ export default function CartPage() {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to place order. Are you logged in?");
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.message || "Failed to place order. Please try again.");
         }
       }
 

@@ -43,19 +43,20 @@ async function main() {
 
   // 3. Create Services
   const servicesData = [
-    { name: "Wash & Fold", description: "Fresh washing, premium detergents and neat folding for your everyday clothes.", pricePerUnit: 110, unit: "kg" },
-    { name: "Wash & Steam Iron", description: "Deep cleaning with crisp steam ironing for a perfectly finished look.", pricePerUnit: 165, unit: "kg" },
-    { name: "Premium Dry Cleaning", description: "Expert care for suits, sarees, jackets, lehengas and delicate garments with premium fabric treatment.", pricePerUnit: 220, unit: "piece" },
-    { name: "Shoe Spa", description: "Complete shoe cleaning, deodorizing and restoration service for all types of footwear.", pricePerUnit: 149, unit: "pair" },
-    { name: "Home Care Laundry", description: "Professional cleaning for curtains, bedsheets, sofa covers, carpets and more.", pricePerUnit: 89, unit: "piece" },
+    { id: "wash-fold-5kg", name: "Wash & Fold — 5kg Pack", description: "5kg of everyday clothes — washed, dried & neatly folded.", pricePerUnit: 550, unit: "pack" },
+    { id: "wash-iron-5kg", name: "Wash & Steam Iron — 5kg Pack", description: "5kg deep wash + crisp steam ironing for a perfect finish.", pricePerUnit: 825, unit: "pack" },
+    { id: "dry-clean-suit", name: "Suit Dry Cleaning", description: "Professional dry cleaning for one suit (blazer + trousers).", pricePerUnit: 499, unit: "piece" },
+    { id: "dry-clean-saree", name: "Saree Dry Cleaning", description: "Expert silk & designer saree dry cleaning with fabric care.", pricePerUnit: 350, unit: "piece" },
+    { id: "shoe-spa-basic", name: "Shoe Spa — Basic", description: "Deep clean, deodorize, and polish for any pair of shoes.", pricePerUnit: 149, unit: "pair" },
+    { id: "home-bedsheet", name: "Bedsheet Wash Pack", description: "2 double bedsheets — washed, ironed & neatly packed.", pricePerUnit: 299, unit: "pack" },
   ];
 
   const services = [];
   for (const s of servicesData) {
     const service = await prisma.service.upsert({
-      where: { id: s.name.toLowerCase().replace(/[^a-z0-9]/g, "-") },
+      where: { id: s.id },
       update: { ...s },
-      create: { id: s.name.toLowerCase().replace(/[^a-z0-9]/g, "-"), ...s },
+      create: { ...s },
     });
     services.push(service);
     console.log(`✅ Service: ${service.name} — ₹${service.pricePerUnit}/${service.unit}`);

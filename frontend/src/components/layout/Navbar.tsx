@@ -43,6 +43,19 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  const [user, setUser] = useState<{ name: string } | null>(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    if (token && storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user");
+      }
+    }
+  }, []);
+
   return (
     <>
       <header
@@ -109,13 +122,31 @@ export default function Navbar() {
                   )}
                 </Link>
 
-                {/* Sign in */}
-                <Link
-                  href="/login"
-                  className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
-                >
-                  Sign in
-                </Link>
+                {/* Auth State */}
+                {user ? (
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-medium text-gray-700">
+                      Hi, {user.name?.split(" ")[0] || "User"}
+                    </span>
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        window.location.href = "/login";
+                      }}
+                      className="px-3 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition-colors duration-200"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    Sign in
+                  </Link>
+                )}
 
                 {/* Contact Us CTA */}
                 <Link
@@ -273,12 +304,25 @@ export default function Navbar() {
 
           {/* Mobile CTAs */}
           <div className="flex flex-col gap-2">
-            <Link
-              href="/login"
-              className="w-full py-2.5 text-center text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
-            >
-              Sign in
-            </Link>
+            {user ? (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("user");
+                  window.location.href = "/login";
+                }}
+                className="w-full py-2.5 text-center text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition-colors duration-200"
+              >
+                Logout ({user.name?.split(" ")[0]})
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="w-full py-2.5 text-center text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
+              >
+                Sign in
+              </Link>
+            )}
             <Link
               href="/contactus"
               className="w-full py-2.5 text-center text-sm font-semibold bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors duration-200"
